@@ -27,8 +27,21 @@ services:
     # please note that last definitions always *replace* previous ones
 
     App\Services\StateNames:
+        class: App\Services\StateNames
         arguments:
-            $kernelProjectDirectory: '%kernel.project_dir%'
+            $resourcePath: '%kernel.project_dir%/config/resources/states.yaml'
 
     App\Services\StateMigrator:
         public: true # to allow usage inside container-aware migrations
+        arguments:
+            $resourceLoader: '@App\Services\StateNames'
+
+    app.services.task_type_names:
+        class: App\Services\YamlResourceLoader
+        arguments:
+            $resourcePath: '%kernel.project_dir%/config/resources/task-types.yaml'
+
+    App\Services\TaskTypeMigrator:
+        public: true # to allow usage inside container-aware migrations
+        arguments:
+            $resourceLoader: '@app.services.task_type_names'

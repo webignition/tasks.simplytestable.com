@@ -28,7 +28,7 @@ class StateMigratorTest extends AbstractBaseTestCase
     private $repository;
 
     /**
-     * @var StateNames
+     * @var string[]
      */
     private $stateNames;
 
@@ -38,7 +38,6 @@ class StateMigratorTest extends AbstractBaseTestCase
 
         $this->stateMigrator = self::$container->get(StateMigrator::class);
         $this->entityManager = self::$container->get(EntityManagerInterface::class);
-        $this->stateNames = self::$container->get(StateNames::class);
 
         $this->repository = $this->entityManager->getRepository(State::class);
 
@@ -49,6 +48,9 @@ class StateMigratorTest extends AbstractBaseTestCase
         }
 
         $this->entityManager->flush();
+
+        $stateNames = self::$container->get(StateNames::class);
+        $this->stateNames = $stateNames->getData();
     }
 
     public function testMigrateFromEmpty()
@@ -57,12 +59,12 @@ class StateMigratorTest extends AbstractBaseTestCase
 
         $this->stateMigrator->migrate();
 
-        $this->assertStateNames($this->stateNames->getNames(), $this->getRepositoryStateNames());
+        $this->assertStateNames($this->stateNames, $this->getRepositoryStateNames());
     }
 
     public function testMigrateFromNonEmpty()
     {
-        $expectedStateNames = $this->stateNames->getNames();
+        $expectedStateNames = $this->stateNames;
         sort($expectedStateNames);
 
         $this->assertEmpty($this->repository->findAll());
@@ -77,7 +79,7 @@ class StateMigratorTest extends AbstractBaseTestCase
 
         $this->stateMigrator->migrate();
 
-        $this->assertStateNames($this->stateNames->getNames(), $this->getRepositoryStateNames());
+        $this->assertStateNames($expectedStateNames, $this->getRepositoryStateNames());
     }
 
     /**
