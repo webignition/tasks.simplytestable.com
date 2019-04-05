@@ -1,0 +1,19 @@
+env:
+  global:
+    - APP_ENV=test
+    - DATABASE_URL=mysql://root:@127.0.0.1:3306/myapp_test
+    - APP_SECRET=Secret!
+
+language: php
+php:
+  - "7.2"
+
+before_install:
+  - chmod +x ./bin/console
+
+install:
+  - composer install
+  - composer config --global process-timeout 2000
+
+script:
+  - composer ci
