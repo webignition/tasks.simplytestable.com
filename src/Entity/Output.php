@@ -8,7 +8,6 @@ use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *     name="TaskOutput",
  *     indexes={
  *         @ORM\Index(name="hash_idx", columns={"hash"})
  *     }
