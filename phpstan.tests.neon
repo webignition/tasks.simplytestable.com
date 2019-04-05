@@ -1,0 +1,10 @@
+parameters:
+  paths:
+    - tests
+
+  ignoreErrors:
+    - message: '#^Service "[^"]+" is private.$#'
+      path: %currentWorkingDirectory%/tests/
+
+includes:
+  - phpstan.neon
