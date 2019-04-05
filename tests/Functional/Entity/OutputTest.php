@@ -3,24 +3,10 @@
 namespace App\Tests\Functional\Entity;
 
 use App\Entity\Output;
-use App\Tests\Functional\AbstractBaseTestCase;
-use Doctrine\ORM\EntityManagerInterface;
 use webignition\InternetMediaType\InternetMediaType;
 
-class OutputTest extends AbstractBaseTestCase
+class OutputTest extends AbstractEntityTest
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->entityManager = self::$container->get(EntityManagerInterface::class);
-    }
-
     public function testCreate()
     {
         $content = 'content';
