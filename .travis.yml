@@ -14,6 +14,7 @@ before_install:
 install:
   - composer install
   - composer config --global process-timeout 2000
+  - ./bin/console cache:clear --env=test
 
 script:
   - composer ci

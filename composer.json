@@ -50,8 +50,10 @@
             "@auto-scripts"
         ],
         "cs": "./vendor/bin/phpcs",
+        "static-analysis": "./vendor/bin/phpstan analyze",
         "ci": [
-            "@composer cs"
+            "@composer cs",
+            "@composer static-analysis"
         ]
     },
     "conflict": {
@@ -64,6 +66,9 @@
         }
     },
     "require-dev": {
+        "phpstan/phpstan": "^0.11.5",
+        "phpstan/phpstan-mockery": "^0.11.0",
+        "phpstan/phpstan-symfony": "^0.11.3",
         "squizlabs/php_codesniffer": "^3.4"
     }
 }
