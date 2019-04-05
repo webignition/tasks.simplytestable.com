@@ -1,0 +1,14 @@
+task:
+  - new
+  - preparing
+  - prepared
+  - queued
+  - in-progress
+  - completed
+  - cancelled
+  - failed
+  - skipped
+
+worker:
+  - active
+  - offline
