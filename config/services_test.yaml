@@ -4,7 +4,7 @@ services:
     autoconfigure: true
     public: false
 
-  App\Services\StateLoader:
+  App\Services\TaskFactory:
     public: true
 
   App\Services\TaskTypeLoader:

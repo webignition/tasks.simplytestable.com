@@ -105,6 +105,11 @@ class Task implements \JsonSerializable
         return $task;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getIdentifier(): ?string
     {
         return $this->identifier;

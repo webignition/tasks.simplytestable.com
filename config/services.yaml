@@ -45,3 +45,9 @@ services:
         public: true # to allow usage inside container-aware migrations
         arguments:
             $resourceLoader: '@app.services.task_type_names'
+
+    Hashids\Hashids:
+
+    App\Services\TaskIdentifierFactory:
+        arguments:
+            $instanceId: '%env(INSTANCE_ID)%'
