@@ -10,6 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TaskType implements \JsonSerializable
 {
+    const TYPE_HTML_VALIDATION = 'html validation';
+    const TYPE_CSS_VALIDATION = 'css validation';
+    const TYPE_URL_DISCOVERY = 'url discovery';
+    const TYPE_LINK_INTEGRITY = 'link integrity';
+
     /**
      * @var int
      *
