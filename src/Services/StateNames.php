@@ -7,11 +7,12 @@ class StateNames extends YamlResourceLoader
     public function getData()
     {
         $data = parent::getData();
+
         $names = [];
 
-        foreach ($data as $entity => $names) {
-            foreach ($names as $name) {
-                $names[] = $entity . '-' . $name;
+        foreach ($data as $entity => $entityStateNames) {
+            foreach ($entityStateNames as $entityStateName) {
+                $names[] = $entity . '-' . $entityStateName;
             }
         }
 
