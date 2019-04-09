@@ -6,3 +6,6 @@ services:
 
   App\Services\StateLoader:
     public: true
+
+  App\Services\TaskTypeLoader:
+    public: true
