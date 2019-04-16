@@ -31,7 +31,8 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($url, ObjectReflector::getProperty($task, 'url'));
         $this->assertSame($state, $task->getState());
         $this->assertSame($type, ObjectReflector::getProperty($task, 'type'));
-        $this->assertNull(ObjectReflector::getProperty($task, 'timePeriod'));
+        $this->assertNull(ObjectReflector::getProperty($task, 'startDateTime'));
+        $this->assertNull(ObjectReflector::getProperty($task, 'endDateTime'));
         $this->assertNull(ObjectReflector::getProperty($task, 'output'));
         $this->assertSame($parameters, ObjectReflector::getProperty($task, 'parameters'));
     }
@@ -63,13 +64,10 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $startDateTime = new \DateTime();
 
         $task = Task::create('x45yHo', 'http://example.com/', new State(), new TaskType(), '');
-        $this->assertNull(ObjectReflector::getProperty($task, 'timePeriod'));
+        $this->assertNull(ObjectReflector::getProperty($task, 'startDateTime'));
 
         $task->setStartDateTime($startDateTime);
-        $timePeriod = ObjectReflector::getProperty($task, 'timePeriod');
-        $this->assertNotNull($timePeriod);
-
-        $taskStartDateTime = ObjectReflector::getProperty($timePeriod, 'startDateTime');
+        $taskStartDateTime = ObjectReflector::getProperty($task, 'startDateTime');
         $this->assertSame($startDateTime, $taskStartDateTime);
 
         $this->expectException(TaskMutationException::class);
@@ -94,15 +92,12 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $endDateTime = new \DateTime();
 
         $task = Task::create('x45yHo', 'http://example.com/', new State(), new TaskType(), '');
-        $this->assertNull(ObjectReflector::getProperty($task, 'timePeriod'));
+        $this->assertNull(ObjectReflector::getProperty($task, 'endDateTime'));
 
         $task->setStartDateTime($startDateTime);
         $task->setEndDateTime($endDateTime);
 
-        $timePeriod = ObjectReflector::getProperty($task, 'timePeriod');
-        $this->assertNotNull($timePeriod);
-
-        $taskEndDateTime = ObjectReflector::getProperty($timePeriod, 'endDateTime');
+        $taskEndDateTime = ObjectReflector::getProperty($task, 'endDateTime');
         $this->assertSame($endDateTime, $taskEndDateTime);
     }
 
@@ -141,7 +136,8 @@ class TaskTest extends \PHPUnit\Framework\TestCase
                     'url' => 'http://example.com/',
                     'type' => TaskType::TYPE_HTML_VALIDATION,
                     'state' => Task::STATE_COMPLETED,
-                    'time_period' => [],
+                    'start_date_time' => null,
+                    'end_date_time' => null,
                     'parameters' => 'parameters value',
                     'output' => null,
                 ],
@@ -175,10 +171,8 @@ class TaskTest extends \PHPUnit\Framework\TestCase
                     'url' => 'http://example.com/',
                     'type' => TaskType::TYPE_HTML_VALIDATION,
                     'state' => Task::STATE_COMPLETED,
-                    'time_period' => [
-                        'start_date_time' => '2019-04-05T19:00:00+00:00',
-                        'end_date_time' => '2019-04-05T19:10:00+00:00',
-                    ],
+                    'start_date_time' => '2019-04-05T19:00:00+00:00',
+                    'end_date_time' => '2019-04-05T19:10:00+00:00',
                     'parameters' => 'parameters value',
                     'output' => [
                         'content' => 'output content',

@@ -19,6 +19,7 @@ class Task implements \JsonSerializable
     const STATE_CANCELLED = 'cancelled';
     const STATE_FAILED = 'failed';
     const STATE_SKIPPED = 'skipped';
+    const DATE_FORMAT = \DateTime::ATOM;
 
     /**
      * @var int
@@ -67,11 +68,18 @@ class Task implements \JsonSerializable
     private $type;
 
     /**
-     * @var ?TimePeriod
+     * @var ?\DateTime
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\TimePeriod", cascade={"persist", "remove"})
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $timePeriod;
+    private $startDateTime;
+
+    /**
+     * @var ?\DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $endDateTime;
 
     /**
      * @var ?Output
@@ -142,11 +150,11 @@ class Task implements \JsonSerializable
      */
     public function setStartDateTime(\DateTime $startDateTime)
     {
-        if (!empty($this->timePeriod)) {
+        if (!empty($this->startDateTime)) {
             throw TaskMutationException::createStartDateTimeAlreadySetException();
         }
 
-        $this->timePeriod = TimePeriod::create($startDateTime);
+        $this->startDateTime = $startDateTime;
     }
 
     /**
@@ -156,11 +164,11 @@ class Task implements \JsonSerializable
      */
     public function setEndDateTime(\DateTime $endDateTime)
     {
-        if (empty($this->timePeriod)) {
+        if (empty($this->startDateTime)) {
             throw TaskMutationException::createStartDateTimeNotSetException();
         }
 
-        $this->timePeriod->setEndDateTime($endDateTime);
+        $this->endDateTime = $endDateTime;
     }
 
     public function setOutput(Output $output)
@@ -170,15 +178,28 @@ class Task implements \JsonSerializable
 
     public function jsonSerialize(): array
     {
+        $startDateTime = $this->startDateTime instanceof \DateTime
+            ? $this->startDateTime->format(self::DATE_FORMAT)
+            : null;
+
+        $endDateTime = $this->endDateTime instanceof \DateTime
+            ? $this->endDateTime->format(self::DATE_FORMAT)
+            : null;
+
+        $output = $this->output instanceof Output
+            ? $this->output->jsonSerialize()
+            : null;
+
         return [
             'id' => $this->identifier,
             'job_id' => $this->jobIdentifier,
             'url' => $this->url,
             'type' => $this->type->jsonSerialize(),
             'state' => $this->state->jsonSerialize(),
-            'time_period' => $this->timePeriod ? $this->timePeriod->jsonSerialize() : [],
+            'start_date_time' => $startDateTime,
+            'end_date_time' => $endDateTime,
             'parameters' => $this->parameters,
-            'output' => $this->output ? $this->output->jsonSerialize() : null,
+            'output' => $output,
         ];
     }
 }
