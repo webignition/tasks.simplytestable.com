@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Task implements \JsonSerializable
 {
+    const STATE_PREFIX = 'task-';
     const STATE_NEW = 'new';
     const STATE_PREPARING = 'preparing';
     const STATE_PREPARED = 'prepared';

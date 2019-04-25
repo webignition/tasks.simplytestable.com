@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TaskFactory
 {
-    const CREATION_STATE = 'task-' . Task::STATE_NEW;
+    const CREATION_STATE = Task::STATE_PREFIX . Task::STATE_NEW;
 
     private $taskIdentifierFactory;
     private $stateLoader;
