@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
-use App\Services\TaskTypeMigrator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-final class Version20190405161059 extends AbstractMigration implements ContainerAwareInterface
+final class Version20190405161059 extends AbstractMigration
 {
-    use ContainerAwareTrait;
-
     public function getDescription() : string
     {
         return '';
@@ -45,13 +37,5 @@ final class Version20190405161059 extends AbstractMigration implements Container
         );
 
         $this->addSql('DROP TABLE task_type');
-    }
-
-    public function postUp(Schema $schema): void
-    {
-        parent::postUp($schema);
-
-        $migrator = $this->container->get(TaskTypeMigrator::class);
-        $migrator->migrate();
     }
 }

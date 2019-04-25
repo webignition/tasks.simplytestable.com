@@ -26,28 +26,34 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Services\StateNames:
-        class: App\Services\StateNames
-        arguments:
-            $resourcePath: '%kernel.project_dir%/config/resources/states.yaml'
-
-    App\Services\StateMigrator:
-        public: true # to allow usage inside container-aware migrations
-        arguments:
-            $resourceLoader: '@App\Services\StateNames'
-
-    app.services.task_type_names:
-        class: App\Services\YamlResourceLoader
-        arguments:
-            $resourcePath: '%kernel.project_dir%/config/resources/task-types.yaml'
-
-    App\Services\TaskTypeMigrator:
-        public: true # to allow usage inside container-aware migrations
-        arguments:
-            $resourceLoader: '@app.services.task_type_names'
-
     Hashids\Hashids:
 
     App\Services\TaskIdentifierFactory:
         arguments:
             $instanceId: '%env(INSTANCE_ID)%'
+
+    App\Services\StatesDataProvider:
+        arguments:
+            $resourcePath: '%kernel.project_dir%/config/resources/states.yaml'
+
+    App\Services\FixtureLoader\StateFixtureLoader:
+        arguments:
+            $dataProvider: '@App\Services\StatesDataProvider'
+
+    app.services.data-provider.task-types:
+        class: App\Services\YamlResourceDataProvider
+        arguments:
+            $resourcePath: '%kernel.project_dir%/config/resources/task-types.yaml'
+
+    App\Services\FixtureLoader\TaskTypeFixtureLoader:
+        arguments:
+            $dataProvider: '@app.services.data-provider.task-types'
+
+    App\Services\FixtureLoader:
+        calls:
+            - method: addFixtureLoader
+              arguments:
+                  - '@App\Services\FixtureLoader\StateFixtureLoader'
+            - method: addFixtureLoader
+              arguments:
+                  - '@App\Services\FixtureLoader\TaskTypeFixtureLoader'

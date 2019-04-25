@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-class StateNames extends YamlResourceLoader
+class StatesDataProvider extends YamlResourceDataProvider
 {
-    public function getData()
+    public function getData(): array
     {
         $data = parent::getData();
 

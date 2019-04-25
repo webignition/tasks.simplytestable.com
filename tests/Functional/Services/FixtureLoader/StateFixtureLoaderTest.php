@@ -1,31 +1,17 @@
 <?php
 
-namespace App\Tests\Functional\Services;
+namespace App\Tests\Functional\Services\FixtureLoader;
 
 use App\Entity\State;
-use App\Services\StateMigrator;
-use App\Services\StateNames;
-use App\Tests\Functional\AbstractBaseTestCase;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
+use App\Services\FixtureLoader\StateFixtureLoader;
+use App\Services\StatesDataProvider;
 
-class StateMigratorTest extends AbstractBaseTestCase
+class StateFixtureLoaderTest extends AbstractFixtureLoaderTest
 {
     /**
-     * @var StateMigrator
+     * @var StateFixtureLoader
      */
-    private $stateMigrator;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var EntityRepository|ObjectRepository
-     */
-    private $repository;
+    private $stateFixtureLoader;
 
     /**
      * @var string[]
@@ -36,33 +22,33 @@ class StateMigratorTest extends AbstractBaseTestCase
     {
         parent::setUp();
 
-        $this->stateMigrator = self::$container->get(StateMigrator::class);
-        $this->entityManager = self::$container->get(EntityManagerInterface::class);
-
-        $this->repository = $this->entityManager->getRepository(State::class);
-
-        $states = $this->repository->findAll();
-
-        foreach ($states as $state) {
-            $this->entityManager->remove($state);
-        }
-
-        $this->entityManager->flush();
-
-        $stateNames = self::$container->get(StateNames::class);
+        $this->stateFixtureLoader = self::$container->get(StateFixtureLoader::class);
+        $stateNames = self::$container->get(StatesDataProvider::class);
         $this->stateNames = $stateNames->getData();
     }
 
-    public function testMigrateFromEmpty()
+    protected function getEntityClass(): string
+    {
+        return State::class;
+    }
+
+    protected function getEntityClassesToRemove(): array
+    {
+        return [
+            State::class,
+        ];
+    }
+
+    public function testLoadFromEmpty()
     {
         $this->assertEmpty($this->repository->findAll());
 
-        $this->stateMigrator->migrate();
+        $this->stateFixtureLoader->load();
 
         $this->assertStateNames($this->stateNames, $this->getRepositoryStateNames());
     }
 
-    public function testMigrateFromNonEmpty()
+    public function testLoadFromNonEmpty()
     {
         $expectedStateNames = $this->stateNames;
         sort($expectedStateNames);
@@ -77,7 +63,7 @@ class StateMigratorTest extends AbstractBaseTestCase
 
         $this->assertStateNames([$stateName], $this->getRepositoryStateNames());
 
-        $this->stateMigrator->migrate();
+        $this->stateFixtureLoader->load();
 
         $this->assertStateNames($expectedStateNames, $this->getRepositoryStateNames());
     }

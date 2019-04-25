@@ -24,8 +24,8 @@ class TaskTypeLoaderTest extends AbstractBaseTestCase
 
         $this->taskTypeLoader = self::$container->get(TaskTypeLoader::class);
 
-        $taskTypeNames = self::$container->get('app.services.task_type_names');
-        $this->taskTypeNames = $taskTypeNames->getData();
+        $taskTypesDataProvider = self::$container->get('app.services.data-provider.task-types');
+        $this->taskTypeNames = $taskTypesDataProvider->getData();
     }
 
     public function testLoadKnown()

@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
-use App\Services\StateMigrator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-final class Version20190405151642 extends AbstractMigration implements ContainerAwareInterface
+final class Version20190405151642 extends AbstractMigration
 {
-    use ContainerAwareTrait;
-
     public function getDescription() : string
     {
         return '';
@@ -45,13 +37,5 @@ final class Version20190405151642 extends AbstractMigration implements Container
         );
 
         $this->addSql('DROP TABLE state');
-    }
-
-    public function postUp(Schema $schema): void
-    {
-        parent::postUp($schema);
-
-        $migrator = $this->container->get(StateMigrator::class);
-        $migrator->migrate();
     }
 }

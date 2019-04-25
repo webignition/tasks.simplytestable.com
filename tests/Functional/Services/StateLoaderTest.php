@@ -4,7 +4,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\State;
 use App\Services\StateLoader;
-use App\Services\StateNames;
+use App\Services\StatesDataProvider;
 use App\Tests\Functional\AbstractBaseTestCase;
 
 class StateLoaderTest extends AbstractBaseTestCase
@@ -25,8 +25,8 @@ class StateLoaderTest extends AbstractBaseTestCase
 
         $this->stateLoader = self::$container->get(StateLoader::class);
 
-        $stateNames = self::$container->get(StateNames::class);
-        $this->stateNames = $stateNames->getData();
+        $statesDataProvider = self::$container->get(StatesDataProvider::class);
+        $this->stateNames = $statesDataProvider->getData();
     }
 
     public function testLoadKnown()
