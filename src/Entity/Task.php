@@ -88,11 +88,11 @@ class Task implements \JsonSerializable
     private $endDateTime;
 
     /**
-     * @var ?Output
+     * @var ?int
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Output", cascade={"persist"})
+     * @ORM\Column(type="integer", nullable=true, options={"unsigned": true})
      */
-    private $output;
+    private $outputId;
 
     /**
      * @var string
@@ -187,9 +187,14 @@ class Task implements \JsonSerializable
         $this->endDateTime = $endDateTime;
     }
 
-    public function setOutput(Output $output)
+    public function setOutputId(int $outputId)
     {
-        $this->output = $output;
+        $this->outputId = $outputId;
+    }
+
+    public function getOutputId(): ?int
+    {
+        return $this->outputId;
     }
 
     public function jsonSerialize(): array
@@ -202,10 +207,6 @@ class Task implements \JsonSerializable
             ? $this->endDateTime->format(self::DATE_FORMAT)
             : null;
 
-        $output = $this->output instanceof Output
-            ? $this->output->jsonSerialize()
-            : null;
-
         return [
             'id' => $this->identifier,
             'job_id' => $this->jobIdentifier,
@@ -215,7 +216,6 @@ class Task implements \JsonSerializable
             'start_date_time' => $startDateTime,
             'end_date_time' => $endDateTime,
             'parameters' => $this->parameters,
-            'output' => $output,
         ];
     }
 }

@@ -75,7 +75,6 @@ class TasksControllerTest extends AbstractControllerTest
         $this->assertArrayHasKey('start_date_time', $taskData);
         $this->assertArrayHasKey('end_date_time', $taskData);
         $this->assertArrayHasKey('parameters', $taskData);
-        $this->assertArrayHasKey('output', $taskData);
 
         $identifier = $taskData['id'];
         $this->assertIsString($identifier);
@@ -103,7 +102,6 @@ class TasksControllerTest extends AbstractControllerTest
             $this->assertNull($taskData['end_date_time']);
             $this->assertNull(ObjectReflector::getProperty($task, 'endDateTime'));
             $this->assertSame($taskData['parameters'], ObjectReflector::getProperty($task, 'parameters'));
-            $this->assertNull($taskData['output']);
             $this->assertNull(ObjectReflector::getProperty($task, 'output'));
         }
     }

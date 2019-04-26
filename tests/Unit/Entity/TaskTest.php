@@ -4,14 +4,12 @@
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\Output;
 use App\Entity\State;
 use App\Entity\Task;
 use App\Entity\TaskType;
 use App\Entity\Url;
 use App\Exception\TaskMutationException;
 use App\Tests\Services\ObjectReflector;
-use webignition\InternetMediaType\InternetMediaType;
 use webignition\Uri\Uri;
 
 class TaskTest extends \PHPUnit\Framework\TestCase
@@ -132,7 +130,7 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $url = Url::create(new Uri('http://example.com/'));
 
         return [
-            'time period not set, output not set' => [
+            'time period not set' => [
                 'taskCreator' => function () use ($url) {
                     $task = Task::create(
                         'x45yHo',
@@ -155,10 +153,9 @@ class TaskTest extends \PHPUnit\Framework\TestCase
                     'start_date_time' => null,
                     'end_date_time' => null,
                     'parameters' => 'parameters value',
-                    'output' => null,
                 ],
             ],
-            'time period set, output set' => [
+            'time period set' => [
                 'taskCreator' => function () use ($url) {
                     $task = Task::create(
                         'x45yHo',
@@ -172,13 +169,6 @@ class TaskTest extends \PHPUnit\Framework\TestCase
                     $task->setStartDateTime(new \DateTime('2019-04-05 19:00'));
                     $task->setEndDateTime(new \DateTime('2019-04-05 19:10'));
 
-                    $task->setOutput(Output::create(
-                        'output content',
-                        new InternetMediaType('text', 'plain'),
-                        1,
-                        2
-                    ));
-
                     return $task;
                 },
                 'expectedSerializedData' => [
@@ -190,12 +180,6 @@ class TaskTest extends \PHPUnit\Framework\TestCase
                     'start_date_time' => '2019-04-05T19:00:00+00:00',
                     'end_date_time' => '2019-04-05T19:10:00+00:00',
                     'parameters' => 'parameters value',
-                    'output' => [
-                        'content' => 'output content',
-                        'content_type' => 'text/plain',
-                        'error_count' => 1,
-                        'warning_count' => 2,
-                    ],
                 ],
             ],
         ];
