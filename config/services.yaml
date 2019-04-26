@@ -57,3 +57,5 @@ services:
             - method: addFixtureLoader
               arguments:
                   - '@App\Services\FixtureLoader\TaskTypeFixtureLoader'
+
+    webignition\CreateTaskCollectionPayload\Factory:

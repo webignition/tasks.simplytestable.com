@@ -3,21 +3,21 @@
 
 namespace App\Tests\Unit\ArgumentResolver;
 
-use App\ArgumentResolver\CreateTaskRequestValueResolver;
-use App\Request\CreateTaskRequest;
-use App\Services\RequestFactory\CreateTaskRequestFactory;
+use App\ArgumentResolver\CreateTaskCollectionRequestValueResolver;
+use App\Request\CreateTaskCollectionRequest;
+use App\Services\RequestFactory\CreateTaskCollectionRequestFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class CreateTaskRequestValueResolverTest extends \PHPUnit\Framework\TestCase
+class CreateTaskCollectionRequestValueResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider supportsDataProvider
      */
     public function testSupports(string $argumentType, bool $expectedSupports)
     {
-        $valueResolver = new CreateTaskRequestValueResolver(
-            \Mockery::mock(CreateTaskRequestFactory::class)
+        $valueResolver = new CreateTaskCollectionRequestValueResolver(
+            \Mockery::mock(CreateTaskCollectionRequestFactory::class)
         );
 
         $argumentMetaData = \Mockery::mock(ArgumentMetadata::class);
@@ -38,7 +38,7 @@ class CreateTaskRequestValueResolverTest extends \PHPUnit\Framework\TestCase
                 'expectedSupports' => false,
             ],
             'does support' => [
-                'argumentType' => CreateTaskRequest::class,
+                'argumentType' => CreateTaskCollectionRequest::class,
                 'expectedSupports' => true,
             ],
         ];
@@ -47,19 +47,19 @@ class CreateTaskRequestValueResolverTest extends \PHPUnit\Framework\TestCase
     public function testResolve()
     {
         $request = new Request();
-        $createTaskRequest = \Mockery::mock(CreateTaskRequest::class);
+        $createTaskCollectionRequest = \Mockery::mock(CreateTaskCollectionRequest::class);
 
-        $createTaskRequestFactory = \Mockery::mock(CreateTaskRequestFactory::class);
-        $createTaskRequestFactory
+        $createTaskCollectionRequestFactory = \Mockery::mock(CreateTaskCollectionRequestFactory::class);
+        $createTaskCollectionRequestFactory
             ->shouldReceive('create')
             ->with($request)
-            ->andReturn($createTaskRequest);
+            ->andReturn($createTaskCollectionRequest);
 
-        $valueResolver = new CreateTaskRequestValueResolver($createTaskRequestFactory);
+        $valueResolver = new CreateTaskCollectionRequestValueResolver($createTaskCollectionRequestFactory);
 
         $generator = $valueResolver->resolve($request, \Mockery::mock(ArgumentMetadata::class));
 
         $this->assertInstanceOf(\Generator::class, $generator);
-        $this->assertSame($createTaskRequest, $generator->current());
+        $this->assertSame($createTaskCollectionRequest, $generator->current());
     }
 }

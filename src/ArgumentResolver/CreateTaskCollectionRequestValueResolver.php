@@ -2,24 +2,24 @@
 
 namespace App\ArgumentResolver;
 
-use App\Request\CreateTaskRequest;
-use App\Services\RequestFactory\CreateTaskRequestFactory;
+use App\Request\CreateTaskCollectionRequest;
+use App\Services\RequestFactory\CreateTaskCollectionRequestFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class CreateTaskRequestValueResolver implements ArgumentValueResolverInterface
+class CreateTaskCollectionRequestValueResolver implements ArgumentValueResolverInterface
 {
     private $factory;
 
-    public function __construct(CreateTaskRequestFactory $factory)
+    public function __construct(CreateTaskCollectionRequestFactory $factory)
     {
         $this->factory = $factory;
     }
 
     public function supports(Request $request, ArgumentMetadata $argument)
     {
-        return CreateTaskRequest::class === $argument->getType();
+        return CreateTaskCollectionRequest::class === $argument->getType();
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument)

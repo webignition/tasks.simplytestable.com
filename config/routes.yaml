@@ -1,6 +1,6 @@
-task_create:
+tasks_create:
     path: /create
-    controller: App\Controller\TaskController::createAction
+    controller: App\Controller\TasksController::createAction
     methods: POST
     defaults:
         _format: json
