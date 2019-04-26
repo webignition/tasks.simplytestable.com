@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(indexes={@ORM\Index(name="jobIdentifier_idx", columns={"job_identifier"})})
  */
 class Task implements \JsonSerializable
 {
@@ -41,7 +42,7 @@ class Task implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true, nullable=true, options={"collation"="latin1_bin"})
+     * @ORM\Column(type="string", unique=false, nullable=true, options={"collation"="latin1_bin"})
      */
     private $jobIdentifier;
 
