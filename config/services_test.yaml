@@ -9,3 +9,6 @@ services:
 
   App\Services\TaskTypeLoader:
     public: true
+
+  App\Services\UrlFactory:
+    public: true

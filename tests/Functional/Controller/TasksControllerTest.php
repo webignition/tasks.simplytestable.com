@@ -95,7 +95,7 @@ class TasksControllerTest extends AbstractControllerTest
             $this->assertNotNull($task->getId());
             $this->assertSame($taskData['id'], $task->getIdentifier());
             $this->assertSame($taskData['job_id'], $task->getJobIdentifier());
-            $this->assertSame($taskData['url'], ObjectReflector::getProperty($task, 'url'));
+            $this->assertEquals($taskData['url'], ObjectReflector::getProperty($task, 'url'));
             $this->assertEquals($taskData['type'], ObjectReflector::getProperty($task, 'type'));
             $this->assertEquals($taskData['state'], $task->getState());
             $this->assertNull($taskData['start_date_time']);

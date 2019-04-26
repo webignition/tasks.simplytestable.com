@@ -8,19 +8,23 @@ use App\Entity\Output;
 use App\Entity\State;
 use App\Entity\Task;
 use App\Entity\TaskType;
+use App\Entity\Url;
 use App\Exception\TaskMutationException;
 use App\Tests\Services\ObjectReflector;
 use webignition\InternetMediaType\InternetMediaType;
+use webignition\Uri\Uri;
 
 class TaskTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
         $jobId = 'x45yHo';
-        $url = 'http://example.com/';
+        $urlString = 'http://example.com/';
         $state = new State();
         $type = new TaskType();
         $parameters = 'parameters content';
+
+        $url = Url::create(new Uri($urlString));
 
         $task = Task::create($jobId, $url, $state, $type, $parameters);
 
@@ -28,7 +32,7 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $this->assertNull(ObjectReflector::getProperty($task, 'id'));
         $this->assertNull($task->getIdentifier());
         $this->assertSame($jobId, $task->getJobIdentifier());
-        $this->assertSame($url, ObjectReflector::getProperty($task, 'url'));
+        $this->assertEquals($urlString, ObjectReflector::getProperty($task, 'url'));
         $this->assertSame($state, $task->getState());
         $this->assertSame($type, ObjectReflector::getProperty($task, 'type'));
         $this->assertNull(ObjectReflector::getProperty($task, 'startDateTime'));
@@ -39,7 +43,9 @@ class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testSetIdentifier()
     {
-        $task = Task::create('x45yHo', 'http://example.com/', new State(), new TaskType(), '');
+        $url = Url::create(new Uri('http://example.com/'));
+
+        $task = Task::create('x45yHo', $url, new State(), new TaskType(), '');
         $this->assertNull(ObjectReflector::getProperty($task, 'identifier'));
 
         $identifier = '7xb467';
@@ -49,10 +55,12 @@ class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testSetState()
     {
+        $url = Url::create(new Uri('http://example.com/'));
+
         $originalState = new State();
         $newState = new State();
 
-        $task = Task::create('x45yHo', 'http://example.com/', $originalState, new TaskType(), '');
+        $task = Task::create('x45yHo', $url, $originalState, new TaskType(), '');
         $this->assertSame($originalState, $task->getState());
 
         $task->setState($newState);
@@ -61,9 +69,11 @@ class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testStartStartDateTime()
     {
+        $url = Url::create(new Uri('http://example.com/'));
+
         $startDateTime = new \DateTime();
 
-        $task = Task::create('x45yHo', 'http://example.com/', new State(), new TaskType(), '');
+        $task = Task::create('x45yHo', $url, new State(), new TaskType(), '');
         $this->assertNull(ObjectReflector::getProperty($task, 'startDateTime'));
 
         $task->setStartDateTime($startDateTime);
@@ -78,7 +88,9 @@ class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testSetEndDateTimeNoStartDateTimeSet()
     {
-        $task = Task::create('x45yHo', 'http://example.com/', new State(), new TaskType(), '');
+        $url = Url::create(new Uri('http://example.com/'));
+
+        $task = Task::create('x45yHo', $url, new State(), new TaskType(), '');
 
         $this->expectException(TaskMutationException::class);
         $this->expectExceptionCode(TaskMutationException::CODE_START_DATE_TIME_NOT_SET);
@@ -88,10 +100,12 @@ class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function testSetEndDateTime()
     {
+        $url = Url::create(new Uri('http://example.com/'));
+
         $startDateTime = new \DateTime();
         $endDateTime = new \DateTime();
 
-        $task = Task::create('x45yHo', 'http://example.com/', new State(), new TaskType(), '');
+        $task = Task::create('x45yHo', $url, new State(), new TaskType(), '');
         $this->assertNull(ObjectReflector::getProperty($task, 'endDateTime'));
 
         $task->setStartDateTime($startDateTime);
@@ -115,12 +129,14 @@ class TaskTest extends \PHPUnit\Framework\TestCase
 
     public function jsonSerializeDataProvider(): array
     {
+        $url = Url::create(new Uri('http://example.com/'));
+
         return [
             'time period not set, output not set' => [
-                'taskCreator' => function () {
+                'taskCreator' => function () use ($url) {
                     $task = Task::create(
                         'x45yHo',
-                        'http://example.com/',
+                        $url,
                         State::create(Task::STATE_COMPLETED),
                         TaskType::create(TaskType::TYPE_HTML_VALIDATION),
                         'parameters value'
@@ -143,10 +159,10 @@ class TaskTest extends \PHPUnit\Framework\TestCase
                 ],
             ],
             'time period set, output set' => [
-                'taskCreator' => function () {
+                'taskCreator' => function () use ($url) {
                     $task = Task::create(
                         'x45yHo',
-                        'http://example.com/',
+                        $url,
                         State::create(Task::STATE_COMPLETED),
                         TaskType::create(TaskType::TYPE_HTML_VALIDATION),
                         'parameters value'

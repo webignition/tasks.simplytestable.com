@@ -13,23 +13,28 @@ class TaskFactory
     private $taskIdentifierFactory;
     private $stateLoader;
     private $entityManager;
+    private $urlFactory;
 
     public function __construct(
         TaskIdentifierFactory $taskIdentifierFactory,
         StateLoader $stateLoader,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UrlFactory $urlFactory
     ) {
         $this->taskIdentifierFactory = $taskIdentifierFactory;
         $this->stateLoader = $stateLoader;
         $this->entityManager = $entityManager;
+        $this->urlFactory = $urlFactory;
     }
 
     public function create(
         string $jobIdentifier,
-        string $url,
+        string $urlString,
         TaskType $type,
         string $parameters
     ): Task {
+        $url = $this->urlFactory->create($urlString);
+
         $state = $this->stateLoader->load(self::CREATION_STATE);
 
         $task = Task::create($jobIdentifier, $url, $state, $type, $parameters);

@@ -47,9 +47,9 @@ class Task implements \JsonSerializable
     private $jobIdentifier;
 
     /**
-     * @var string
+     * @var Url
      *
-     * @ORM\Column(type="text", nullable=false, options={"collation"="utf8_unicode_ci"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Url", cascade={"persist"})
      */
     private $url;
 
@@ -99,7 +99,7 @@ class Task implements \JsonSerializable
 
     public static function create(
         string $jobIdentifier,
-        string $url,
+        Url $url,
         State $state,
         TaskType $type,
         string $parameters
