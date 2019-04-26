@@ -7,8 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(indexes={@ORM\Index(name="jobIdentifier_idx", columns={"job_identifier"})})
+ * @ORM\Table(
+ *     indexes={@ORM\Index(name="jobIdentifier_idx", columns={"job_identifier"})},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="uniqueness_idx", columns={"job_identifier","url_id","type_id"})}
+ * )
  */
+
 class Task implements \JsonSerializable
 {
     const STATE_PREFIX = 'task-';
@@ -135,6 +139,11 @@ class Task implements \JsonSerializable
         return $this->jobIdentifier;
     }
 
+    public function getUrl(): Url
+    {
+        return $this->url;
+    }
+
     public function getState(): State
     {
         return $this->state;
@@ -143,6 +152,11 @@ class Task implements \JsonSerializable
     public function setState(State $state)
     {
         $this->state = $state;
+    }
+
+    public function getType(): TaskType
+    {
+        return $this->type;
     }
 
     /**

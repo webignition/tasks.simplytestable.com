@@ -34,7 +34,7 @@ class TaskFactoryTest extends AbstractBaseTestCase
         $urlString = 'http://example.com/';
         $state = $stateLoader->load('task-' . Task::STATE_NEW);
 
-        $parameters = 'parameters content';
+        $parameters = '[]';
         $type = $taskTypeLoader->load(TaskType::TYPE_HTML_VALIDATION);
 
         if ($type instanceof TaskType) {
@@ -54,6 +54,23 @@ class TaskFactoryTest extends AbstractBaseTestCase
 
             $this->assertInstanceOf(Url::class, $url);
             $this->assertEquals($urlString, $url);
+        }
+    }
+
+    public function testCreateWithMatchingExistingTaskReturnsExistingTask()
+    {
+        $taskTypeLoader = self::$container->get(TaskTypeLoader::class);
+
+        $jobId = 'x123';
+        $urlString = 'http://example.com/';
+        $type = $taskTypeLoader->load(TaskType::TYPE_HTML_VALIDATION);
+        $parameters = '[]';
+
+        if ($type instanceof TaskType) {
+            $task1 = $this->taskFactory->create($jobId, $urlString, $type, $parameters);
+            $task2 = $this->taskFactory->create($jobId, $urlString, $type, $parameters);
+
+            $this->assertSame($task1, $task2);
         }
     }
 }

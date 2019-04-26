@@ -14,6 +14,7 @@ class TaskFactory
     private $stateLoader;
     private $entityManager;
     private $urlFactory;
+    private $repository;
 
     public function __construct(
         TaskIdentifierFactory $taskIdentifierFactory,
@@ -25,6 +26,7 @@ class TaskFactory
         $this->stateLoader = $stateLoader;
         $this->entityManager = $entityManager;
         $this->urlFactory = $urlFactory;
+        $this->repository = $entityManager->getRepository(Task::class);
     }
 
     public function create(
@@ -39,14 +41,33 @@ class TaskFactory
 
         $task = Task::create($jobIdentifier, $url, $state, $type, $parameters);
 
-        $this->entityManager->persist($task);
-        $this->entityManager->flush();
+        $existingTask = $this->findExistingTask($task);
 
-        $task->setIdentifier($this->taskIdentifierFactory->create($task));
+        if ($existingTask instanceof Task) {
+            $task = $existingTask;
+        } else {
+            $this->entityManager->persist($task);
+            $this->entityManager->flush();
 
-        $this->entityManager->persist($task);
-        $this->entityManager->flush();
+            $task->setIdentifier($this->taskIdentifierFactory->create($task));
+
+            $this->entityManager->persist($task);
+            $this->entityManager->flush();
+        }
 
         return $task;
+    }
+
+    private function findExistingTask(Task $task): ?Task
+    {
+        $existingTask = $this->repository->findOneBy([
+            'jobIdentifier' => $task->getJobIdentifier(),
+            'url' => $task->getUrl(),
+            'type' => $task->getType(),
+        ]);
+
+        return $existingTask instanceof Task
+            ? $existingTask
+            : null;
     }
 }
