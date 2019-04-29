@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\OutputInterface;
 use Doctrine\ORM\Mapping as ORM;
 use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
 
@@ -13,7 +14,7 @@ use webignition\InternetMediaTypeInterface\InternetMediaTypeInterface;
  *     }
  * )
  */
-class Output implements \JsonSerializable
+class Output implements OutputInterface
 {
     /**
      * @var int
@@ -25,9 +26,9 @@ class Output implements \JsonSerializable
     private $id;
 
     /**
-     * @var string
+     * @var string|resource
      *
-     * @ORM\Column(type="text", nullable=false)
+     * @ORM\Column(type="blob", nullable=false)
      */
     private $content;
 
@@ -70,7 +71,7 @@ class Output implements \JsonSerializable
         $output->contentType = (string) $contentType;
         $output->errorCount = $errorCount;
         $output->warningCount = $warningCount;
-        $output->hash = md5((string) json_encode($output));
+        $output->hash = md5($content);
 
         return $output;
     }
@@ -80,9 +81,13 @@ class Output implements \JsonSerializable
         return $this->id;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
-        return $this->content;
+        if (is_string($this->content)) {
+            return $this->content;
+        }
+
+        return (string) stream_get_contents($this->content);
     }
 
     public function getContentType(): string

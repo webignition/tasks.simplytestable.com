@@ -10,5 +10,5 @@ services:
   App\Services\TaskTypeLoader:
     public: true
 
-  App\Services\UrlFactory:
+  App\Services\OutputStorage:
     public: true

@@ -59,3 +59,5 @@ services:
                   - '@App\Services\FixtureLoader\TaskTypeFixtureLoader'
 
     webignition\CreateTaskCollectionPayload\Factory:
+
+    webignition\InternetMediaType\Parser\Parser:
